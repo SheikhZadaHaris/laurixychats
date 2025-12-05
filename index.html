@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LAURIXY CHATS</title>
+    <link rel="icon" type="image/jpeg" href="https://i.ibb.co/VYsQ21VR/LAURIXY-CHATS-LOGO-1.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="particles-container"></div>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="screen active">
+        <img src="https://i.ibb.co/VYsQ21VR/LAURIXY-CHATS-LOGO-1.jpg" alt="LAURIXY CHATS" class="splash-logo-img">
+        <div class="splash-logo">LAURIXY CHATS</div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen">
+        <div class="welcome-content">
+            <img src="https://i.ibb.co/VYsQ21VR/LAURIXY-CHATS-LOGO-1.jpg" alt="LAURIXY CHATS" class="welcome-logo-img">
+            <h1 class="welcome-logo">LAURIXY CHATS</h1>
+            <p class="welcome-tagline">Connect instantly with style</p>
+            <div class="welcome-buttons">
+                <button class="btn btn-primary" onclick="showScreen('login-screen')">Login</button>
+                <button class="btn btn-secondary" onclick="showScreen('signup-screen')">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+        <button class="back-btn" onclick="showScreen('welcome-screen')">←</button>
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-title">Welcome Back</h1>
+            </div>
+            <form id="email-login-form" class="auth-form active glass-card" onsubmit="handleEmailLogin(event)">
+                <div class="input-group"><label>Email</label><input type="email" class="input-field" id="login-email"
+                        placeholder="your@email.com" required></div>
+                <div class="input-group"><label>Password</label><input type="password" class="input-field"
+                        id="login-password" placeholder="••••••••" required></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Screen -->
+    <div id="signup-screen" class="screen">
+        <button class="back-btn" onclick="showScreen('welcome-screen')">←</button>
+        <div class="auth-container">
+            <div class="auth-header">
+                <h1 class="auth-title">Create Account</h1>
+            </div>
+            <form id="email-signup-form" class="auth-form active glass-card" onsubmit="handleEmailSignup(event)">
+                <div class="input-group"><label>Username</label><input type="text" class="input-field"
+                        id="signup-username" placeholder="Your name" required></div>
+                <div class="input-group"><label>Email</label><input type="email" class="input-field" id="signup-email"
+                        placeholder="your@email.com" required></div>
+                <div class="input-group"><label>Password</label><input type="password" class="input-field"
+                        id="signup-password" placeholder="••••••••" required minlength="6"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chats Home -->
+    <div id="chats-home" class="screen">
+        <div class="home-header">
+            <div class="header-top">
+                <h1 class="header-title">LAURIXY CHATS</h1>
+                <div class="header-actions">
+                    <button class="header-btn" id="admin-btn" style="display:none;"
+                        onclick="showScreen('admin-panel')">👑</button>
+                    <button class="header-btn" onclick="showScreen('profile-screen')">👤</button>
+                </div>
+            </div>
+            <div class="search-bar"><span>🔍</span><input type="text" placeholder="Search chats..."
+                    oninput="searchChats(this.value)"></div>
+        </div>
+        <div class="chat-list" id="chat-list"></div>
+        <button class="fab" onclick="openNewChatModal()">+</button>
+    </div>
+
+    <!-- Chat Window -->
+    <div id="chat-window" class="screen">
+        <div class="chat-header">
+            <button class="header-btn" onclick="showScreen('chats-home')">←</button>
+            <div class="avatar" id="chat-user-avatar">U</div>
+            <div class="chat-header-info">
+                <div class="chat-header-name" id="chat-user-name">User</div>
+                <div class="chat-header-status" id="chat-user-status">offline</div>
+            </div>
+            <div class="chat-header-actions">
+                <button class="chat-header-btn" onclick="startVoiceCall()">📞</button>
+                <button class="chat-header-btn" onclick="startVideoCall()">📹</button>
+                <button class="chat-header-btn" onclick="toggleChatMenu()">⋮</button>
+            </div>
+        </div>
+        <div class="messages-area" id="messages-area"></div>
+        <div class="typing-indicator" id="typing-indicator">typing...</div>
+        <div id="emoji-picker">
+            <div class="emoji-grid" id="emoji-grid"></div>
+        </div>
+        <div class="message-input-container">
+            <button class="emoji-btn" onclick="toggleEmojiPicker()">😊</button>
+            <input type="text" id="message-input" placeholder="Type a message..."
+                onkeypress="handleMessageKeyPress(event)" oninput="handleTyping()">
+            <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <!-- Profile Screen -->
+    <div id="profile-screen" class="screen">
+        <button class="back-btn" onclick="showScreen('chats-home')">←</button>
+        <div class="profile-header">
+            <div class="avatar avatar-lg profile-avatar" id="profile-avatar">U</div>
+            <h2 class="profile-name" id="profile-name">Username</h2>
+            <p class="profile-status" id="profile-about">Hey there!</p>
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:8px;">Your UID: <span id="my-uid"
+                    style="color:var(--neon-purple);cursor:pointer;" onclick="copyUID()"></span> 📋</p>
+        </div>
+        <div style="padding:20px;">
+            <div class="profile-section glass-card">
+                <div class="input-group"><label>Username</label><input type="text" class="input-field"
+                        id="edit-username"></div>
+                <div class="input-group"><label>About</label><input type="text" class="input-field" id="edit-about">
+                </div>
+                <button class="btn btn-primary" style="width:100%;" onclick="updateProfile()">Save</button>
+            </div>
+            <div class="profile-section" style="margin-top:24px;">
+                <button class="btn btn-secondary" style="width:100%;margin-bottom:12px;"
+                    onclick="handleLogout()">Logout</button>
+                <button class="btn btn-danger" style="width:100%;" onclick="confirmDeleteAccount()">Delete
+                    Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="screen">
+        <div class="admin-sidebar">
+            <div class="admin-logo">ADMIN</div>
+            <nav class="admin-nav">
+                <div class="admin-nav-item active" onclick="switchAdminSection('users', this)">👥 Users</div>
+                <div class="admin-nav-item" onclick="switchAdminSection('messages', this)">💬 Chats</div>
+                <div class="admin-nav-item" onclick="switchAdminSection('logs', this)">📋 Logs</div>
+                <div class="admin-nav-item" onclick="switchAdminSection('database', this)">🗄️ DB</div>
+                <div class="admin-nav-item" onclick="switchAdminSection('controls', this)">⚙️ Controls</div>
+                <div class="admin-nav-item" onclick="showScreen('chats-home')">← Back</div>
+            </nav>
+        </div>
+        <div class="admin-content">
+            <div id="admin-users" class="admin-section active">
+                <h2 class="admin-section-title">All Users</h2>
+                <div class="search-bar" style="margin-bottom:20px;"><span>🔍</span><input type="text"
+                        placeholder="Search..." oninput="searchAdminUsers(this.value)"></div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-body"></tbody>
+                </table>
+            </div>
+            <div id="admin-messages" class="admin-section">
+                <h2 class="admin-section-title">All Chats</h2>
+                <div id="admin-chats-list"></div>
+                <div id="admin-messages-viewer"></div>
+            </div>
+            <div id="admin-logs" class="admin-section">
+                <h2 class="admin-section-title">Logs</h2>
+                <div id="admin-logs-list"></div>
+            </div>
+            <div id="admin-database" class="admin-section">
+                <h2 class="admin-section-title">Database</h2>
+                <div class="db-tree" id="db-tree-viewer"></div>
+            </div>
+            <div id="admin-controls" class="admin-section">
+                <h2 class="admin-section-title">Controls</h2>
+                <div class="glass-card" style="margin-bottom:20px;">
+                    <h3>Announcement</h3><textarea class="input-field" id="announcement-text" rows="3"
+                        placeholder="Message..."></textarea><button class="btn btn-primary" style="margin-top:12px;"
+                        onclick="sendAnnouncement()">Send</button>
+                </div>
+                <div class="glass-card"><label style="display:flex;gap:12px;"><input type="checkbox"
+                            id="app-disabled-toggle" onchange="toggleAppDisabled()"><span>Disable App</span></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Friend Modal -->
+    <div id="new-chat-modal" class="modal-overlay">
+        <div class="modal">
+            <h2 class="modal-title">Add Friend by UID</h2>
+            <p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px;">Ask your friend for their UID
+                (found in Profile)</p>
+            <div class="input-group"><label>User UID</label><input type="text" class="input-field" id="uid-search-input"
+                    placeholder="Paste UID here..."></div>
+            <button class="btn btn-primary" style="width:100%;margin-top:8px;" onclick="searchByUID()">🔍 Find
+                User</button>
+            <div id="uid-search-result" style="margin-top:16px;"></div>
+            <div class="modal-actions"><button class="btn btn-secondary"
+                    onclick="closeModal('new-chat-modal')">Cancel</button></div>
+        </div>
+    </div>
+
+    <!-- Call Modal -->
+    <div id="call-modal" class="modal-overlay">
+        <div class="modal">
+            <div class="call-user-info">
+                <div class="avatar avatar-lg" id="call-avatar">U</div>
+                <h2 style="margin-top:16px;" id="call-user-name">User</h2>
+                <p class="call-status" id="call-status">Calling...</p>
+            </div>
+            <div class="video-container" id="video-container"><video id="remote-video" autoplay
+                    playsinline></video><video id="local-video" autoplay playsinline muted></video></div>
+            <div class="call-actions" id="incoming-call-actions" style="display:none;"><button class="call-btn accept"
+                    onclick="acceptCall()">📞</button><button class="call-btn reject" onclick="rejectCall()">✕</button>
+            </div>
+            <div class="call-actions" id="active-call-actions" style="display:none;"><button class="call-btn mute"
+                    id="mute-audio-btn" onclick="toggleMuteAudio()">🎤</button><button class="call-btn mute"
+                    id="mute-video-btn" onclick="toggleMuteVideo()">📷</button><button class="call-btn end"
+                    onclick="endCall()">✕</button></div>
+            <div class="call-actions" id="outgoing-call-actions"><button class="call-btn end"
+                    onclick="endCall()">✕</button></div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal">
+            <h2 class="modal-title" id="confirm-title">Confirm</h2>
+            <p id="confirm-message">Are you sure?</p>
+            <div class="modal-actions"><button class="btn btn-secondary"
+                    onclick="closeModal('confirm-modal')">Cancel</button><button class="btn btn-danger"
+                    id="confirm-action-btn">Confirm</button></div>
+        </div>
+    </div>
+
+    <!-- Context Menus -->
+    <div class="context-menu" id="message-context-menu">
+        <div class="context-menu-item" onclick="starMessage()">⭐ Star</div>
+        <div class="context-menu-item" onclick="deleteForMe()">🗑️ Delete for Me</div>
+        <div class="context-menu-item danger" onclick="deleteForEveryone()">🗑️ Delete for All</div>
+    </div>
+    <div class="context-menu" id="chat-options-menu">
+        <div class="context-menu-item" onclick="archiveChat()">📁 Archive</div>
+        <div class="context-menu-item danger" id="block-user-btn" onclick="toggleBlockUser()">🚫 Block</div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
